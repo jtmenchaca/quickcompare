@@ -94,7 +94,7 @@ summarize_cont_vars = function(data, groups, cont_vars, rounding_digits){
   cont_summary = data.frame(stringsAsFactors = F)
 
   for (variable_name in cont_variables){
-    print(variable_name)
+    #print(variable_name)
 
 
     # Define the NA variable to determine if missing data
@@ -307,7 +307,7 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
   all_summary = data.frame(stringsAsFactors = F)
   for (variable_name in variables){
     #variable_name = variables
-    print(variable_name)
+    #print(variable_name)
     dataset_hold = dataset
 
     # If there is a variable that needs to be assessed relative to a sub-
