@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickstats is to ...
+The goal of quickstats is to provide simple functionality to statistically compare two groups and output the results in a publication-ready table. 
 
 ## Installation
 

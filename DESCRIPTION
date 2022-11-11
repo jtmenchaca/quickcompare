@@ -2,8 +2,9 @@ Package: quickstats
 Title: Quickstats
 Version: 0.0.0.9000
 Authors@R: 
-    person("John Thomas", "Menchaca", "jt.menchaca@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-2685-7729"))
+  person(given = "John", family = "Menchaca", middle = "Thomas",
+         email = "jt.menchaca@gmail.com", role = c("aut", "cre"),
+         comment = c(ORCID = "0000-0002-2685-7729"))
 Description: Quickly create publication-ready summary tables summarizing 
                 population sub-groups and testing for statistical differences.
 License: MIT + file LICENSE
