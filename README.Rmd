@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickstats is to provide simple functionality to statistically compare two groups and output the results in a publication-ready table. 
+The goal of quickstats is to ...
 
 ## Installation
 
@@ -35,43 +35,21 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(quickstats)
-library(dplyr)
 ## basic example code
-data(iris)
-summary = iris |>
-  summarize_cols_by_group(
-    group_col = "Species",
-    continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-    rounding_digits = 1
-  )
-
-
-data(mtcars)
-summary = mtcars |>
-  summarize_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("vs", "am", "gear", "carb"),
-    continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
-  )
-
 ```
 
-By default, the binary/categorical columns are compared across groups using the Fisher Exact test (if two groups) and the ANOVA test (if greater than two groups).  
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
 ```{r cars}
-mtcars |>
-  summarize_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("gear", "carb")
-  )
+summary(cars)
 ```
 
-The continuous columns are compared across groups using either the Student's t-Test (if following a normal distribution) or the Wilcoxon signed-rank test (if the distribution is non-normal).  The algorithm uses the Shapiro–Wilk test to test normality.
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
 
-```{r }
-mtcars |> 
-  filter(cyl != 6) |> 
-  summarize_cols_by_group(group_col = "cyl", continuous_cols = c("mpg", "disp", "hp"))
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
 ```
 
 In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
