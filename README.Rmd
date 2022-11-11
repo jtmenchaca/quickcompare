@@ -33,8 +33,8 @@ devtools::install_github("jtmenchaca/quickstats")
 
 ```{r example}
 library(quickstats)
-library(dplyr, quietly = T)
-## basic example code
+library(dplyr, quietly = T, warn.conflicts = F)
+
 data(iris)
 summary = iris |>
   compare_cols_by_group(
@@ -54,7 +54,7 @@ summary = mtcars |>
 
 ```
 
-By default, the binary/categorical columns are compared across groups using the Fisher's Exact Test.  If the data is too large to be run efficiently using the standard Fisher's Exact Test, comparisons will be made using the Monte Carlo test for Fisher's.
+By default, the binary/categorical columns are compared across groups using the Fisher's Exact test.  If the data is too large to be run efficiently using the standard Fisher's Exact test, comparisons will be made using the Monte Carlo variant for Fisher's.
 
 ```{r}
 mtcars |>
@@ -64,13 +64,12 @@ mtcars |>
   )
 ```
 
-Continuous columns are compared between two groups by the Student's t-Test if the column has a normal distribution or the Wilcoxon signed-rank test if the distribution is non-normal. The Shapiro–Wilk test is used to evaluate normality.
+Continuous columns are compared between two groups by the Student's t-test if the column has a normal distribution or the Wilcoxon signed-rank test if the distribution is non-normal. The Shapiro–Wilk test is used to evaluate normality.
 
 When compared between three groups, the ANOVA test is used to compare continuous columns.
 
 ```{r}
-mtcars |> 
-  filter(cyl != 6) |> 
+mtcars |>  
   compare_cols_by_group(
     group_col = "cyl", 
     continuous_cols = c("mpg", "disp", "hp")
