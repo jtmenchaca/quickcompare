@@ -36,7 +36,7 @@ library(dplyr, quietly = T)
 ## basic example code
 data(iris)
 summary = iris |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "Species",
     continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
     rounding_digits = 1
@@ -45,7 +45,7 @@ summary = iris |>
 
 data(mtcars)
 summary = mtcars |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl",
     binary_or_cat_cols = c("vs", "am", "gear", "carb"),
     continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
@@ -59,7 +59,7 @@ made using the Monte Carlo test for Fisher’s.
 
 ``` r
 mtcars |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl",
     binary_or_cat_cols = c("gear", "carb")
   )
@@ -74,9 +74,9 @@ mtcars |>
 #>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
 #>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
 #>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".05"     "Fisher's Exact"
-#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
+#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".25"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".23"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".21"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
@@ -91,7 +91,7 @@ continuous columns.
 ``` r
 mtcars |> 
   filter(cyl != 6) |> 
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl", 
     continuous_cols = c("mpg", "disp", "hp")
   )
