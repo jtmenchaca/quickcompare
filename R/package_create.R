@@ -1,3 +1,4 @@
+library(devtools)
 library(usethis)
 #https://r-pkgs.org/whole-game.html
 create_package(getwd())
