@@ -476,7 +476,7 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
 
 # Create the first row
 summarize_group = function(data, groups) {
-  message("summarize_group")
+  #message("summarize_group")
   group_col_name = groups
 
   pop = data |>

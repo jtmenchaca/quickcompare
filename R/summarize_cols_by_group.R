@@ -41,7 +41,7 @@ summarize_cols_by_group = function(data, group_col,
                                    binary_or_cat_cols_subpop_val = NULL,
                                    rounding_digits = 1) {
 
-  message("Checking variables...")
+  #message("Checking variables...")
 
   # Check to make sure there is at least one variable listed
   if (is.null(binary_or_cat_cols) & is.null(continuous_cols)){
@@ -88,7 +88,7 @@ summarize_cols_by_group = function(data, group_col,
     check = argument_check(data, cols_to_remove_NA, "cols_to_remove_NA")
     if (check$error == 1) stop(check$error_val)
 
-    message("Removing NAs from listed columns...")
+    #message("Removing NAs from listed columns...")
     data = remove_na_cols(data, group_col, cols_to_remove_NA, remove_group_col_NA)
   }
 
@@ -97,15 +97,15 @@ summarize_cols_by_group = function(data, group_col,
   # If group variable is factor/integer, convert to character
   #message("we got here")
   if (typeof(unlist(data[[group_col]])) == "integer") {
-    message("Converting group column...")
+    #message("Converting group column...")
     data[[group_col]] = as.character(data[[group_col]])
   }
 
   # Start the summary table with the total count of the unique group_col
-  message("Summarizing groups...")
+  #message("Summarizing groups...")
   all_summ = summarize_group(data, group_col)
 
-  message("Analyzing the binary/categorical columns")
+  #message("Analyzing the binary/categorical columns")
   if (!is.null(binary_or_cat_cols)) {
     bin_cat_summ = summarize_bin_cat_vars(data,
                                           groups = group_col,
@@ -114,7 +114,7 @@ summarize_cols_by_group = function(data, group_col,
     all_summ = dplyr::bind_rows(all_summ, bin_cat_summ)
   }
 
-  message("Analyzing the continuous columns")
+  #message("Analyzing the continuous columns")
   if (!is.null(continuous_cols)) {
 
     cont_summ = summarize_cont_vars(data,
@@ -127,7 +127,7 @@ summarize_cols_by_group = function(data, group_col,
   }
 
   # Prettify the column names
-  message("Cleaning up column names...")
+  #message("Cleaning up column names...")
   all_summ = clean_group_names(all_summ, data, group_col)
 
   # Clean the p-values
