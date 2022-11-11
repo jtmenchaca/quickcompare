@@ -24,16 +24,8 @@ devtools::install_github("jtmenchaca/quickstats")
 
 ``` r
 library(quickstats)
-library(dplyr, quietly = T)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-## basic example code
+library(dplyr, quietly = T, warn.conflicts = F)
+
 data(iris)
 summary = iris |>
   compare_cols_by_group(
@@ -53,9 +45,9 @@ summary = mtcars |>
 ```
 
 By default, the binary/categorical columns are compared across groups
-using the Fisher’s Exact Test. If the data is too large to be run
-efficiently using the standard Fisher’s Exact Test, comparisons will be
-made using the Monte Carlo test for Fisher’s.
+using the Fisher’s Exact test. If the data is too large to be run
+efficiently using the standard Fisher’s Exact test, comparisons will be
+made using the Monte Carlo variant for Fisher’s.
 
 ``` r
 mtcars |>
@@ -74,14 +66,14 @@ mtcars |>
 #>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
 #>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
 #>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".05"     "Fisher's Exact"
-#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".25"     "Fisher's Exact"
+#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".21"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
 #> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".21"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
 Continuous columns are compared between two groups by the Student’s
-t-Test if the column has a normal distribution or the Wilcoxon
+t-test if the column has a normal distribution or the Wilcoxon
 signed-rank test if the distribution is non-normal. The Shapiro–Wilk
 test is used to evaluate normality.
 
@@ -89,20 +81,19 @@ When compared between three groups, the ANOVA test is used to compare
 continuous columns.
 
 ``` r
-mtcars |> 
-  filter(cyl != 6) |> 
+mtcars |>  
   compare_cols_by_group(
     group_col = "cyl", 
     continuous_cols = c("mpg", "disp", "hp")
   )
-#> # A tibble: 4 × 5
-#>   Characteristic     `Cyl - 4`           `Cyl - 8`            `p-value` statis…¹
-#>   <chr>              <chr>               <chr>                <chr>     <chr>   
-#> 1 Total Count, n     11                  14                   ""        ""      
-#> 2 Mpg, mean (SD)     26.7 (4.5)          15.1 (2.6)           "<.01"    "Studen…
-#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 350.5 [301.8, 390.0] "<.01"    "Wilcox…
-#> 4 Hp, mean (SD)      82.6 (20.9)         209.2 (51.0)         "<.01"    "Studen…
-#> # … with abbreviated variable name ¹​statistical_test
+#> # A tibble: 4 × 6
+#>   Characteristic     `Cyl - 4`           `Cyl - 6`       Cyl -…¹ p-val…² stati…³
+#>   <chr>              <chr>               <chr>           <chr>   <chr>   <chr>  
+#> 1 Total Count, n     11                  7               14      ""      ""     
+#> 2 Mpg, mean (SD)     26.7 (4.5)          19.7 (1.5)      15.1 (… "<.01"  "ANOVA"
+#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 167.6 [160.0, … 350.5 … "<.01"  "ANOVA"
+#> 4 Hp, median [IQR]   91.0 [65.5, 96.0]   110.0 [110.0, … 192.5 … "<.01"  "ANOVA"
+#> # … with abbreviated variable names ¹​`Cyl - 8`, ²​`p-value`, ³​statistical_test
 ```
 
 Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
