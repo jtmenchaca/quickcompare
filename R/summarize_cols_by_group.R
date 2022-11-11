@@ -1,6 +1,8 @@
+#' Make a publication-ready table
+#'
 #' Quickly create publication-ready summary tables summarizing population sub-groups and testing for statistical differences.
 #'
-#' @export
+#'
 #'
 #' @param data A data frame or data frame extension
 #' @param group_col The column/variable by which the data will be grouped
@@ -11,7 +13,7 @@
 #' @param binary_or_cat_cols_subpop If specified, columns to be used for population counts for the binary_or_cat_cols.
 #' @param binary_or_cat_cols_subpop_val Values defining the appropriate sub-populations within the 'binary_or_cat_cols_subpop' argument
 #' @param rounding_digits Digits used for rounding table values and p-values
-#'
+#' @export
 #'
 #' @return A data frame
 #'

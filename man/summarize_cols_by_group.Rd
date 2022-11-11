@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarize_cols_by_group.R
 \name{summarize_cols_by_group}
 \alias{summarize_cols_by_group}
-\title{Quickly create publication-ready summary tables summarizing population sub-groups and testing for statistical differences.}
+\title{Make a publication-ready table}
 \usage{
 summarize_cols_by_group(
   data,
