@@ -6,9 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickstats is to provide simple functionality to
-statistically compare two groups and output the results in a
-publication-ready table.
+The goal of quickstats is to simply and statistically compare columns by
+group and output the results in a publication-ready table.
 
 ## Installation
 
@@ -65,20 +64,23 @@ mtcars |>
 #>  5 "     5"         "2 (18.2)" "1 (14.3)" "2 (14.3)"  "1"       "Fisher's Exact"
 #>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
 #>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
-#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".05"     "Fisher's Exact"
-#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".21"     "Fisher's Exact"
+#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".04"     "Fisher's Exact"
+#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".21"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".23"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
-Continuous columns are compared between two groups by the Student’s
-t-test if the column has a normal distribution or the Wilcoxon
-signed-rank test if the distribution is non-normal. The Shapiro–Wilk
-test is used to evaluate normality.
+Continuous columns are compared between two groups by either 1) the
+Student’s t-test if the column has a normal distribution or 2) the
+Wilcoxon signed-rank test if the distribution is non-normal. The
+Shapiro–Wilk test is used to evaluate normality.
 
-When compared between three groups, the ANOVA test is used to compare
+When comparing between three groups, the ANOVA test is used to compare
 continuous columns.
+
+If a continuous variable has a non-normal distribution by the
+Shaprio-Wilk test, it is summarized using IQR.
 
 ``` r
 mtcars |>  
