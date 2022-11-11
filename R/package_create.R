@@ -1,5 +1,10 @@
 library(usethis)
+#https://r-pkgs.org/whole-game.html
 create_package(getwd())
+use_git()
+
+
+
 use_mit_license("John Thomas Menchaca")
 
 
