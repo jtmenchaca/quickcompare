@@ -16,3 +16,16 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://github.com/jtmenchaca/quickstats
 BugReports: https://github.com/jtmenchaca/quickstats/issues
+Imports: 
+    broom,
+    dplyr,
+    fastDummies,
+    janitor,
+    purrr,
+    readxl,
+    scales,
+    stats,
+    stringr,
+    tidyr,
+    tidyselect,
+    writexl

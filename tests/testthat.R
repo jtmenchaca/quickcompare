@@ -9,4 +9,3 @@
 library(testthat)
 library(quickstats)
 
-test_check("quickstats")
