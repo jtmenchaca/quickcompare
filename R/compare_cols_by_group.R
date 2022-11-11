@@ -3,7 +3,6 @@
 #' Quickly create publication-ready summary tables summarizing population sub-groups and testing for statistical differences.
 #'
 #'
-#'
 #' @param data A data frame or data frame extension
 #' @param group_col The column/variable by which the data will be grouped
 #' @param binary_or_cat_cols Columns to be summarized as binary/categorical variables.
@@ -19,20 +18,20 @@
 #'
 #' @examples
 #' summary = iris |>
-#'   summarize_cols_by_group(
+#'   compare_cols_by_group(
 #'     group_col = "Species",
 #'     continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
 #'     rounding_digits = 1
 #'   )
 #'
 #' summary = mtcars |>
-#'   summarize_cols_by_group(
+#'   compare_cols_by_group(
 #'     group_col = "cyl",
 #'     binary_or_cat_cols = c("vs", "am", "gear", "carb"),
 #'     continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
 #'   )
 
-summarize_cols_by_group = function(data, group_col,
+compare_cols_by_group = function(data, group_col,
                                    binary_or_cat_cols = NULL,
                                    continuous_cols = NULL,
                                    remove_group_col_NA = T,

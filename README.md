@@ -24,7 +24,7 @@ devtools::install_github("jtmenchaca/quickstats")
 
 ``` r
 library(quickstats)
-library(dplyr)
+library(dplyr, quietly = T)
 #> 
 #> Attaching package: 'dplyr'
 #> The following objects are masked from 'package:stats':
@@ -73,10 +73,10 @@ mtcars |>
 #>  5 "     5"         "2 (18.2)" "1 (14.3)" "2 (14.3)"  "1"       "Fisher's Exact"
 #>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
 #>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
-#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".06"     "Fisher's Exact"
+#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".05"     "Fisher's Exact"
 #>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".21"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".23"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 

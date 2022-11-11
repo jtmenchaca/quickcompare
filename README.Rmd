@@ -33,11 +33,11 @@ devtools::install_github("jtmenchaca/quickstats")
 
 ```{r example}
 library(quickstats)
-library(dplyr)
+library(dplyr, quietly = T)
 ## basic example code
 data(iris)
 summary = iris |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "Species",
     continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
     rounding_digits = 1
@@ -46,7 +46,7 @@ summary = iris |>
 
 data(mtcars)
 summary = mtcars |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl",
     binary_or_cat_cols = c("vs", "am", "gear", "carb"),
     continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
@@ -58,7 +58,7 @@ By default, the binary/categorical columns are compared across groups using the 
 
 ```{r}
 mtcars |>
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl",
     binary_or_cat_cols = c("gear", "carb")
   )
@@ -71,7 +71,7 @@ When compared between three groups, the ANOVA test is used to compare continuous
 ```{r}
 mtcars |> 
   filter(cyl != 6) |> 
-  summarize_cols_by_group(
+  compare_cols_by_group(
     group_col = "cyl", 
     continuous_cols = c("mpg", "disp", "hp")
   )
