@@ -20,38 +20,107 @@ You can install the development version of quickstats from
 devtools::install_github("jtmenchaca/quickstats")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Examples
 
 ``` r
 library(quickstats)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 ## basic example code
+data(iris)
+summary = iris |>
+  summarize_cols_by_group(
+    group_col = "Species",
+    continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
+    rounding_digits = 1
+  )
+
+
+data(mtcars)
+summary = mtcars |>
+  summarize_cols_by_group(
+    group_col = "cyl",
+    binary_or_cat_cols = c("vs", "am", "gear", "carb"),
+    continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
+  )
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+By default, the binary/categorical columns are compared across groups
+using the Fisher Exact test (if two groups) and the ANOVA test (if
+greater than two groups).
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+mtcars |>
+  summarize_cols_by_group(
+    group_col = "cyl",
+    binary_or_cat_cols = c("gear", "carb")
+  )
+#> # A tibble: 12 × 6
+#>    Characteristic   `Cyl - 4`  `Cyl - 6`  `Cyl - 8`   `p-value` statistical_test
+#>    <chr>            <chr>      <chr>      <chr>       <chr>     <chr>           
+#>  1 "Total Count, n" "11"       "7"        "14"        ""        ""              
+#>  2 "Gear, n (%)"    ""         ""         ""          ""        ""              
+#>  3 "     3"         "1 (9.1)"  "2 (28.6)" "12 (85.7)" "<.01"    "Fisher's Exact"
+#>  4 "     4"         "8 (72.7)" "4 (57.1)" "0 (0)"     "<.01"    "Fisher's Exact"
+#>  5 "     5"         "2 (18.2)" "1 (14.3)" "2 (14.3)"  "1"       "Fisher's Exact"
+#>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
+#>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
+#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".06"     "Fisher's Exact"
+#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
+#> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".22"     "Fisher's Exact"
+#> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+The continuous columns are compared across groups using either the
+Student’s t-Test (if following a normal distribution) or the Wilcoxon
+signed-rank test (if the distribution is non-normal). The algorithm uses
+the Shapiro–Wilk test to test normality.
 
-You can also embed plots, for example:
+``` r
+mtcars |> 
+  filter(cyl != 6) |> 
+  summarize_cols_by_group(
+    group_col = "cyl", 
+    continuous_cols = c("mpg", "disp", "hp")
+  )
+#> # A tibble: 4 × 5
+#>   Characteristic     `Cyl - 4`           `Cyl - 8`            `p-value` statis…¹
+#>   <chr>              <chr>               <chr>                <chr>     <chr>   
+#> 1 Total Count, n     11                  14                   ""        ""      
+#> 2 Mpg, mean (SD)     26.7 (4.5)          15.1 (2.6)           "<.01"    "Studen…
+#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 350.5 [301.8, 390.0] "<.01"    "Wilcox…
+#> 4 Hp, mean (SD)      82.6 (20.9)         209.2 (51.0)         "<.01"    "Studen…
+#> # … with abbreviated variable name ¹​statistical_test
+```
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
+with missing values in specific columns.
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+Sometimes, you want to use a subset of your dataset to compare across
+groups for your binary/categorical data. To specify the column you would
+like to use as a subset, use the `binary_or_cat_cols_subpop` argument.
+
+If the `binary_or_cat_cols_subpop` argument is provided, it must be the
+same length as the `binary_or_cat_cols` argument where each value in
+`binary_or_cat_cols` aligns by index to the value in the
+`binary_or_cat_cols_subgroup`. Columns that should use the general
+population should have a value of the empty string ““.
+
+For now, any columns specified in `binary_or_cat_cols_subpop` should be
+binary columns, where a value of `1` will be used to identify the
+appropriate subpopulation.
+
+Note: I know the `binary_or_cat_cols_subpop` is not intuitive at the
+moment. It will be changed to be more user-friendly in the future!
+
+I hope this can be helpful!
+
+Best, J.T. Menchaca
