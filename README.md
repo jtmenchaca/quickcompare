@@ -53,8 +53,9 @@ summary = mtcars |>
 ```
 
 By default, the binary/categorical columns are compared across groups
-using the Fisher Exact test (if two groups) and the ANOVA test (if
-greater than two groups).
+using the Fisher’s Exact Test. If the data is too large to be run
+efficiently using the standard Fisher’s Exact Test, comparisons will be
+made using the Monte Carlo test for Fisher’s.
 
 ``` r
 mtcars |>
@@ -75,14 +76,17 @@ mtcars |>
 #>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".06"     "Fisher's Exact"
 #>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".22"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".21"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
-The continuous columns are compared across groups using either the
-Student’s t-Test (if following a normal distribution) or the Wilcoxon
-signed-rank test (if the distribution is non-normal). The algorithm uses
-the Shapiro–Wilk test to test normality.
+Continuous columns are compared between two groups by the Student’s
+t-Test if the column has a normal distribution or the Wilcoxon
+signed-rank test if the distribution is non-normal. The Shapiro–Wilk
+test is used to evaluate normality.
+
+When compared between three groups, the ANOVA test is used to compare
+continuous columns.
 
 ``` r
 mtcars |> 
