@@ -88,7 +88,4 @@ For now, any columns specified in `binary_or_cat_cols_subpop` should be binary c
 
 Note: I know the `binary_or_cat_cols_subpop` is not intuitive at the moment.  It will be changed to be more user-friendly in the future!
 
-I hope this can be helpful!
-
-Best,
-J.T. Menchaca
+- J.T. Menchaca
