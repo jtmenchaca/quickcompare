@@ -44,11 +44,15 @@ summary = penguins_data |>
   )
 ```
 
-By default, the binary/categorical columns are compared across groups
-using the Chi-square test or the Fisher’s Exact test, depending on the
-count of results. If there are no observations for a given subgroup, no
-p-value is provided (consider comparing across sub-groups that all have
-at least one observation in a separate analysis).
+### Binary/Categorical data
+
+Binary/categorical columns are compared across groups using the
+Chi-square test or the Fisher’s Exact test, depending on the count of
+results. If there are no observations for a binary/categorical column in
+one of the groups, no p-value is provided. If this happens and more than
+two groups are being evaluated, and if the statistical testing is still
+important, consider limiting the analysis to fewer groups where all
+groups have at least one observation.
 
 ``` r
 penguins_data |> 
@@ -75,6 +79,8 @@ penguins_data |>
 #> # … with abbreviated variable name ¹​statistical_test
 ```
 
+### Continuous data
+
 Continuous columns are compared between two groups by either 1) the
 Student’s t-test if the column has a normal distribution or 2) the
 Wilcoxon signed-rank test if the distribution is non-normal. The
@@ -98,10 +104,11 @@ penguins_data |>
 
 ## Save your results to an Excel file
 
-Nearly every abstract/poster/publication will need fine-tuning of
-results table prior to truly being “publication-ready”. As a first step
-along that path, you can use `save_comparison_to_xlsx()` to neatly
-translate your formatted results into an XLSX file.
+When making a report or publication, nearly every table will need some
+fine-tuning in a program like Microsoft Excel. Neatly convert your
+comparison to an XLSX file with `save_comparison_to_xlsx()`. Note that
+this function still returns a dataframe - the output can still be used
+for more analysis.
 
 ``` r
 penguins_data |> 
