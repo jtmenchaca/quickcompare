@@ -9,7 +9,7 @@
 #' @return A data frame
 #'
 #' @examples
-#' data(mtcars) |>
+#' summary = mtcars |>
 #'   compare_cols_by_group(
 #'     group_col = "cyl",
 #'     binary_or_cat_cols = c("vs", "am", "gear", "carb"),
@@ -69,9 +69,9 @@ save_comparison_to_xlsx = function(data,
   # Function call example
   OutsideBorders(
     wb,
-    sheet = sheet_name,
-    rows = y_border_start:y_border_end,
-    cols = x_border_start:x_border_end
+    sheet_ = sheet_name,
+    rows_ = y_border_start:y_border_end,
+    cols_ = x_border_start:x_border_end
   )
 
   openxlsx::setRowHeights(wb, sheet_name,

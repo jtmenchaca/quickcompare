@@ -22,7 +22,7 @@ A data frame
 Save summary tables made with 'compare_cols_by_group'
 }
 \examples{
-data(mtcars) |>
+summary = mtcars |>
   compare_cols_by_group(
     group_col = "cyl",
     binary_or_cat_cols = c("vs", "am", "gear", "carb"),

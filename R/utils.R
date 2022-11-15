@@ -517,7 +517,7 @@ argument_check = function(data, argument, argument_name){
   #message(var_check)
   # Make sure all of the values are in the dataset
   if (!all(var_check)) {
-    missing_vars = argument[!varcheck] |> paste0(collapse = ", ")
+    missing_vars = argument[!var_check] |> paste0(collapse = ", ")
     out$error = 1
     out$error_val = paste0("The following columns in the ", argument_name, " argument are not in the dataset: ", missing_vars)
   }
