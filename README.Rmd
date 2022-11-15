@@ -66,7 +66,7 @@ When comparing between three groups, the ANOVA test is used to compare continuou
 
 If a continuous variable has a non-normal distribution by the Shaprio-Wilk test, it is summarized using IQR.
 
-```{r}
+```{r results='hide'}
 penguins_data |> 
   compare_cols_by_group(
     group_col = "species", 
@@ -87,7 +87,7 @@ For now, any columns specified in `binary_or_cat_cols_subpop` should be binary c
 
 Neatly translate your formatted results to an XLSX file with the helper function `save_comparison_to_xlsx`.
 
-```{r echo=FALSE}
+```{r results='hide'}
 penguins_data |> 
   compare_cols_by_group(
     group_col = "species", 

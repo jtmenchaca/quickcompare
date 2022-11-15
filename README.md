@@ -88,20 +88,6 @@ penguins_data |>
     continuous_cols = c("bill_length_mm", "bill_depth_mm", 
                         "flipper_length_mm", "body_mass_g")
   )
-#> # A tibble: 9 × 5
-#>   Characteristic                 `Species - Adelie` Species - …¹ p-val…² stati…³
-#>   <chr>                          <chr>              <chr>        <chr>   <chr>  
-#> 1 "Total Count, n"               152                68           ""      ""     
-#> 2 "Bill Length Mm, median [IQR]" 38.8 [36.8, 40.8]  49.5 [46.3,… "<.01"  "Wilco…
-#> 3 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
-#> 4 "Bill Depth Mm, mean (SD)"     18.3 (1.2)         18.4 (1.1)   ".66"   "Stude…
-#> 5 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
-#> 6 "Flipper Length Mm, mean (SD)" 190.0 (6.5)        195.8 (7.1)  "<.01"  "Stude…
-#> 7 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
-#> 8 "Body Mass G, mean (SD)"       3,700.7 (458.6)    3,733.1 (38… ".59"   "Stude…
-#> 9 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
-#> # … with abbreviated variable names ¹​`Species - Chinstrap`, ²​`p-value`,
-#> #   ³​statistical_test
 ```
 
 Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
@@ -126,20 +112,19 @@ appropriate subpopulation.
 Neatly translate your formatted results to an XLSX file with the helper
 function `save_comparison_to_xlsx`.
 
-    #> # A tibble: 21 × 5
-    #>    Characteristic   `Species - Adelie` `Species - Chinstrap` `p-value` statist…¹
-    #>    <chr>            <chr>              <chr>                 <chr>     <chr>    
-    #>  1 "Total Count, n" "152"              "68"                  ""        ""       
-    #>  2 "Island, n (%)"  ""                 ""                    ""        ""       
-    #>  3 "     Biscoe"    "44 (28.9)"        "0 (0)"               ""        "n/a"    
-    #>  4 "     Dream"     "56 (36.8)"        "68 (100)"            "<.01"    "Chi-squ…
-    #>  5 "     Torgersen" "52 (34.2)"        "0 (0)"               ""        "n/a"    
-    #>  6 "Sex, n (%)"     ""                 ""                    ""        ""       
-    #>  7 "     female"    "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
-    #>  8 "     male"      "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
-    #>  9 "     Missing"   "6 (3.9)"          "0 (0)"               ""        "n/a"    
-    #> 10 "Year, n (%)"    ""                 ""                    ""        ""       
-    #> # … with 11 more rows, and abbreviated variable name ¹​statistical_test
+``` r
+penguins_data |> 
+  compare_cols_by_group(
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year"), 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
+  ) |>
+   save_comparison_to_xlsx(
+     file_name = "Comparison.xlsx",
+     title = "Table 1: Characteristics of Penguins by Species"
+  )
+```
 
 It should leave you with a tidy XLSX file with something that looks like
 the following:
