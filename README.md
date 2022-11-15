@@ -89,11 +89,12 @@ Shapiro–Wilk test is used to evaluate normality.
 When comparing between three or more groups, the ANOVA test is used to
 compare continuous columns.
 
-If a continuous variable has a normal distribution, the mean and
-standard deviation are provided. If non-normal, the median and
-interquartile range are provided.
+If a numeric column has a normal distribution, the mean and standard
+deviation are provided. If non-normal, the median and interquartile
+range are provided.
 
-Note that integer data is analyzed as if continuous.
+All numeric columns are treated as if they are continuous values -
+i.e. no special precautions are made for integer data.
 
 ``` r
 penguins_data |> 
