@@ -1,5 +1,5 @@
-Package: quickstats
-Title: Quickstats
+Package: quickcompare
+Title: Quickcompare
 Version: 0.0.0.9000
 Authors@R: 
   person(given = "John Thomas", family = "Menchaca",
@@ -14,8 +14,8 @@ RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/jtmenchaca/quickstats
-BugReports: https://github.com/jtmenchaca/quickstats/issues
+URL: https://github.com/jtmenchaca/quickcompare
+BugReports: https://github.com/jtmenchaca/quickcompare/issues
 Imports: 
     broom,
     dplyr,

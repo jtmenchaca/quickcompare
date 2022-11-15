@@ -18,21 +18,21 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickstats is to simply and statistically compare columns by group and output the results in a publication-ready table. 
+The goal of quickcompare is to simply and statistically compare columns by group and output the results in a publication-ready table. 
 
 ## Installation
 
-You can install the development version of quickstats from [GitHub](https://github.com/) with:
+You can install the development version of quickcompare from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jtmenchaca/quickstats")
+devtools::install_github("jtmenchaca/quickcompare")
 ```
 
 ## Create a comparison
 
 ```{r example}
-library(quickstats)
+library(quickcompare)
 library(dplyr, quietly = T, warn.conflicts = F)
 library(palmerpenguins, quietly = T, warn.conflicts = F)
 
