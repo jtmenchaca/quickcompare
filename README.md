@@ -6,9 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickcompare is to provide a tool to quickly compare column
-values by groups with the appropriate statistical tests and output the
-results in a publication-ready table.
+The goal of `quickcompare` is to provide a tool to quickly compare
+column values by groups with the appropriate statistical tests and
+output the results in a publication-ready table.
 
 ## Installation
 
@@ -41,7 +41,7 @@ summary = penguins_data |>
 ```
 
 By default, the binary/categorical columns are compared across groups
-using the Chi square test or the Fisher’s Exact test, depending on the
+using the Chi-square test or the Fisher’s Exact test, depending on the
 count of results. If there are no observations for a given subgroup, no
 p-value is provided (consider comparing across sub-groups that all have
 at least one observation in a separate analysis).
@@ -92,10 +92,12 @@ penguins_data |>
   )
 ```
 
-## Save your results to Excel
+## Save your results to an Excel file
 
-Neatly translate your formatted results to an XLSX file with the helper
-function `save_comparison_to_xlsx`.
+Nearly every abstract/poster/publication will need fine-tuning of
+results table prior to truly being “publication-ready”. As a first step
+along that path, you can use `quickcompare` to neatly translate your
+formatted results into an XLSX file with `save_comparison_to_xlsx()`.
 
 ``` r
 penguins_data |> 
@@ -111,8 +113,7 @@ penguins_data |>
   )
 ```
 
-It should leave you with a tidy XLSX file with something that looks like
-the following:
+It should leave you with a tidy XLSX file that looks like the following:
 
 ![A tidy XLSX table](man/figures/README-example-xlsx.png)
 
@@ -121,7 +122,7 @@ the following:
 Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
 with missing values in specific columns.
 
-Sometimes, you want to use a subset of your dataset to compare across
+Sometimes, you want to use a subset of your data to compare across
 groups for your binary/categorical data. To specify the column you would
 like to use as a subset, use the `binary_or_cat_cols_subpop` argument.
 
@@ -135,4 +136,4 @@ For now, any columns specified in `binary_or_cat_cols_subpop` should be
 binary columns, where a value of `1` will be used to identify the
 appropriate subpopulation.
 
-*J.T. Menchaca*
+*John Thomas Menchaca*
