@@ -79,8 +79,9 @@ Shapiro–Wilk test is used to evaluate normality.
 When comparing between three groups, the ANOVA test is used to compare
 continuous columns.
 
-If a continuous variable has a non-normal distribution by the
-Shaprio-Wilk test, it is summarized using IQR.
+If a continuous variable has a normal distribution, the mean and
+standard deviation are provided. If non-normal, the median and
+interquartile range are provided.
 
 ``` r
 penguins_data |> 
@@ -90,23 +91,6 @@ penguins_data |>
                         "flipper_length_mm", "body_mass_g")
   )
 ```
-
-Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
-with missing values in specific columns.
-
-Sometimes, you want to use a subset of your dataset to compare across
-groups for your binary/categorical data. To specify the column you would
-like to use as a subset, use the `binary_or_cat_cols_subpop` argument.
-
-If the `binary_or_cat_cols_subpop` argument is provided, it must be the
-same length as the `binary_or_cat_cols` argument where each value in
-`binary_or_cat_cols` aligns by index to the value in the
-`binary_or_cat_cols_subgroup`. Columns that should use the general
-population should have a value of the empty string `""`.
-
-For now, any columns specified in `binary_or_cat_cols_subpop` should be
-binary columns, where a value of `1` will be used to identify the
-appropriate subpopulation.
 
 ## Save your results to Excel
 
@@ -131,5 +115,24 @@ It should leave you with a tidy XLSX file with something that looks like
 the following:
 
 ![A tidy XLSX table](man/figures/README-example-xlsx.png)
+
+## Extra options
+
+Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
+with missing values in specific columns.
+
+Sometimes, you want to use a subset of your dataset to compare across
+groups for your binary/categorical data. To specify the column you would
+like to use as a subset, use the `binary_or_cat_cols_subpop` argument.
+
+If the `binary_or_cat_cols_subpop` argument is provided, it must be the
+same length as the `binary_or_cat_cols` argument where each value in
+`binary_or_cat_cols` aligns by index to the value in the
+`binary_or_cat_cols_subgroup`. Columns that should use the general
+population should have a value of the empty string `""`.
+
+For now, any columns specified in `binary_or_cat_cols_subpop` should be
+binary columns, where a value of `1` will be used to identify the
+appropriate subpopulation.
 
 *J.T. Menchaca*
