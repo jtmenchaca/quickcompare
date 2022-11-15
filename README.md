@@ -86,8 +86,8 @@ Student’s t-test if the column has a normal distribution or 2) the
 Wilcoxon signed-rank test if the distribution is non-normal. The
 Shapiro–Wilk test is used to evaluate normality.
 
-When comparing between three groups, the ANOVA test is used to compare
-continuous columns.
+When comparing between three or more groups, the ANOVA test is used to
+compare continuous columns.
 
 If a continuous variable has a normal distribution, the mean and
 standard deviation are provided. If non-normal, the median and
