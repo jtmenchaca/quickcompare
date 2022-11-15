@@ -12,7 +12,7 @@ output the results in a publication-ready table.
 
 ## Installation
 
-You can install the development version of quickcompare from
+You can install the development version of `quickcompare` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -21,6 +21,10 @@ devtools::install_github("jtmenchaca/quickcompare")
 ```
 
 ## Create a comparison
+
+`quickcompare` only has two functions. The first and primary function is
+`compare_cols_by_group()` which does the heavy lifting of comparing data
+across groups.
 
 ``` r
 library(quickcompare)
@@ -96,8 +100,8 @@ penguins_data |>
 
 Nearly every abstract/poster/publication will need fine-tuning of
 results table prior to truly being “publication-ready”. As a first step
-along that path, you can use `quickcompare` to neatly translate your
-formatted results into an XLSX file with `save_comparison_to_xlsx()`.
+along that path, you can use `save_comparison_to_xlsx()` to neatly
+translate your formatted results into an XLSX file.
 
 ``` r
 penguins_data |> 

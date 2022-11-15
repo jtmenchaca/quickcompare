@@ -22,7 +22,7 @@ The goal of `quickcompare` is to provide a tool to quickly compare column values
 
 ## Installation
 
-You can install the development version of quickcompare from [GitHub](https://github.com/) with:
+You can install the development version of `quickcompare` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -30,6 +30,8 @@ devtools::install_github("jtmenchaca/quickcompare")
 ```
 
 ## Create a comparison
+
+`quickcompare` only has two functions.  The first and primary function is `compare_cols_by_group()` which does the heavy lifting of comparing data across groups.
 
 ```{r example}
 library(quickcompare)
@@ -77,7 +79,7 @@ penguins_data |>
 
 ## Save your results to an Excel file
 
-Nearly every abstract/poster/publication will need fine-tuning of results table prior to truly being "publication-ready".  As a first step along that path, you can use `quickcompare` to neatly translate your formatted results into an XLSX file with `save_comparison_to_xlsx()`.
+Nearly every abstract/poster/publication will need fine-tuning of results table prior to truly being "publication-ready".  As a first step along that path, you can use `save_comparison_to_xlsx()` to neatly translate your formatted results into an XLSX file.  
 
 ```{r results='hide'}
 penguins_data |> 
