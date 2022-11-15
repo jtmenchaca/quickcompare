@@ -79,7 +79,7 @@ Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows with missin
 
 Sometimes, you want to use a subset of your dataset to compare across groups for your binary/categorical data.  To specify the column you would like to use as a subset, use the `binary_or_cat_cols_subpop` argument. 
 
-If the `binary_or_cat_cols_subpop` argument is provided, it must be the same length as the `binary_or_cat_cols` argument where each value in `binary_or_cat_cols` aligns by index to the value in the `binary_or_cat_cols_subgroup`.  Columns that should use the general population should have a value of the empty string "".  
+If the `binary_or_cat_cols_subpop` argument is provided, it must be the same length as the `binary_or_cat_cols` argument where each value in `binary_or_cat_cols` aligns by index to the value in the `binary_or_cat_cols_subgroup`.  Columns that should use the general population should have a value of the empty string `""`.  
 
 For now, any columns specified in `binary_or_cat_cols_subpop` should be binary columns, where a value of `1` will be used to identify the appropriate subpopulation. 
 

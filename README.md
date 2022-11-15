@@ -101,7 +101,7 @@ If the `binary_or_cat_cols_subpop` argument is provided, it must be the
 same length as the `binary_or_cat_cols` argument where each value in
 `binary_or_cat_cols` aligns by index to the value in the
 `binary_or_cat_cols_subgroup`. Columns that should use the general
-population should have a value of the empty string ““.
+population should have a value of the empty string `""`.
 
 For now, any columns specified in `binary_or_cat_cols_subpop` should be
 binary columns, where a value of `1` will be used to identify the
