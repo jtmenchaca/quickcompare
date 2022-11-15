@@ -29,7 +29,7 @@ You can install the development version of quickstats from [GitHub](https://gith
 devtools::install_github("jtmenchaca/quickstats")
 ```
 
-## Examples
+## Create a comparison
 
 ```{r example}
 library(quickstats)
@@ -86,6 +86,23 @@ If the `binary_or_cat_cols_subpop` argument is provided, it must be the same len
 
 For now, any columns specified in `binary_or_cat_cols_subpop` should be binary columns, where a value of `1` will be used to identify the appropriate subpopulation. 
 
-Note: I know the `binary_or_cat_cols_subpop` is not intuitive at the moment.  It will be changed to be more user-friendly in the future!
+## Save your results to Excel
 
-- J.T. Menchaca
+Neatly translate your formatted results to an XLSX file with the helper function `save_comparison_to_xlsx`.
+
+```{r}
+mtcars |>  
+  compare_cols_by_group(
+    group_col = "cyl", 
+    continuous_cols = c("mpg", "disp", "hp")
+  ) |>
+   save_comparison_to_xlsx(
+     file_name = "Comparison.xlsx",
+     title = "Table 1: Outcomes in Population by Group"
+  )
+```
+
+It should leave you with a tidy XLSX file with something that looks like the following: 
+![A tidy XLSX table](man/figures/README-example-xlsx.png)
+
+*J.T. Menchaca*

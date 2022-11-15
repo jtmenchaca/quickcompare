@@ -19,7 +19,7 @@ You can install the development version of quickstats from
 devtools::install_github("jtmenchaca/quickstats")
 ```
 
-## Examples
+## Create a comparison
 
 ``` r
 library(quickstats)
@@ -65,9 +65,9 @@ mtcars |>
 #>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
 #>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
 #>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".05"     "Fisher's Exact"
-#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".23"     "Fisher's Exact"
+#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
 #> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".23"     "Fisher's Exact"
+#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".22"     "Fisher's Exact"
 #> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
 ```
 
@@ -115,7 +115,32 @@ For now, any columns specified in `binary_or_cat_cols_subpop` should be
 binary columns, where a value of `1` will be used to identify the
 appropriate subpopulation.
 
-Note: I know the `binary_or_cat_cols_subpop` is not intuitive at the
-moment. It will be changed to be more user-friendly in the future!
+## Save your results to Excel
 
--   J.T. Menchaca
+Neatly translate your formatted results to an XLSX file with the helper
+function `save_comparison_to_xlsx`.
+
+``` r
+mtcars |>  
+  compare_cols_by_group(
+    group_col = "cyl", 
+    continuous_cols = c("mpg", "disp", "hp")
+  ) |>
+   save_comparison_to_xlsx(
+     file_name = "Comparison.xlsx",
+     title = "Table 1: Outcomes in Population by Group"
+  )
+#> # A tibble: 4 × 6
+#>   Characteristic     `Cyl - 4`           `Cyl - 6`       Cyl -…¹ p-val…² stati…³
+#>   <chr>              <chr>               <chr>           <chr>   <chr>   <chr>  
+#> 1 Total Count, n     11                  7               14      ""      ""     
+#> 2 Mpg, mean (SD)     26.7 (4.5)          19.7 (1.5)      15.1 (… "<.01"  "ANOVA"
+#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 167.6 [160.0, … 350.5 … "<.01"  "ANOVA"
+#> 4 Hp, median [IQR]   91.0 [65.5, 96.0]   110.0 [110.0, … 192.5 … "<.01"  "ANOVA"
+#> # … with abbreviated variable names ¹​`Cyl - 8`, ²​`p-value`, ³​statistical_test
+```
+
+It should leave you with a tidy XLSX file with something that looks like
+the following: ![A tidy XLSX table](man/figures/README-example-xlsx.png)
+
+*J.T. Menchaca*
