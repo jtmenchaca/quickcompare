@@ -1,13 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# quickstats
+# quickcompare
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of quickcompare is to simply and statistically compare columns
-by group and output the results in a publication-ready table.
+The goal of quickcompare is to provide a tool to quickly compare column
+values by groups with the appropriate statistical tests and output the
+results in a publication-ready table.
 
 ## Installation
 
