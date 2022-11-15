@@ -255,12 +255,15 @@ summarize_cont_vars = function(data, groups, cont_vars, rounding_digits){
 
         if (min_group_val < 5) {
           fisher_results = stats::fisher.test(dataset_subset[[paste0(variable_name, "_NA")]],
-                                              dataset_subset[[groups_var]], simulate.p.value=TRUE) |> broom::tidy()
+                                              dataset_subset[[groups_var]]) |> broom::tidy()
           p_val = fisher_results$p.value |> round(3)
           stat_val = "Fisher's Exact"
         } else {
-          chisq_results = stats::chisq.test(dataset_subset[[paste0(variable_name, "_NA")]],
-                                              dataset_subset[[groups_var]], simulate.p.value=TRUE) |> broom::tidy()
+          chisq_results = suppressWarnings(
+            stats::chisq.test(dataset_subset[[paste0(variable_name, "_NA")]],
+                               dataset_subset[[groups_var]]) |>
+            broom::tidy()
+          )
           p_val = chisq_results$p.value |> round(3)
           stat_val = "Chi-square"
         }
@@ -441,16 +444,18 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
       } else {
         #print("doing fisher")
 
-        if (min_group_val <= 5) {
+        if (min_group_val < 5) {
           fisher_results = stats::fisher.test(dataset_subset[[value]],
                                               dataset_subset[[groups_var]]) |>
             broom::tidy()
           p_val = fisher_results$p.value |> round(3)
           stat_test = "Fisher's Exact"
         } else {
-          chisq_results = stats::chisq.test(dataset_subset[[value]],
-                                              dataset_subset[[groups_var]]) |>
-            broom::tidy()
+          chisq_results = suppressWarnings(
+            stats::chisq.test(dataset_subset[[value]],
+                               dataset_subset[[groups_var]]) |>
+              broom::tidy()
+          )
           p_val = chisq_results$p.value |> round(3)
           stat_test = "Chi-squared"
         }
