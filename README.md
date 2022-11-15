@@ -79,9 +79,9 @@ penguins_data |>
 #> # … with abbreviated variable name ¹​statistical_test
 ```
 
-### Continuous data
+### Numeric data
 
-Continuous columns are compared between two groups by either 1) the
+Numeric columns are compared between two groups by either 1) the
 Student’s t-test if the column has a normal distribution or 2) the
 Wilcoxon signed-rank test if the distribution is non-normal. The
 Shapiro–Wilk test is used to evaluate normality.
@@ -92,6 +92,8 @@ compare continuous columns.
 If a continuous variable has a normal distribution, the mean and
 standard deviation are provided. If non-normal, the median and
 interquartile range are provided.
+
+Note that integer data is analyzed as if continuous.
 
 ``` r
 penguins_data |> 
@@ -129,6 +131,9 @@ It should leave you with a tidy XLSX file that looks like the following:
 ![A tidy XLSX table](man/figures/README-example-xlsx.png)
 
 ## Extra options
+
+There are a few extra options available for the
+`compare_cols_by_group()` function.
 
 Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
 with missing values in specific columns.
