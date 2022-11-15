@@ -24,51 +24,50 @@ devtools::install_github("jtmenchaca/quickstats")
 ``` r
 library(quickstats)
 library(dplyr, quietly = T, warn.conflicts = F)
+library(palmerpenguins, quietly = T, warn.conflicts = F)
 
-data(iris)
-summary = iris |>
+data(penguins, package = "palmerpenguins")
+penguins_data = penguins |>
+  filter(species != "Gentoo") # Simplifying example for only 2 groups
+
+summary = penguins_data |> 
   compare_cols_by_group(
-    group_col = "Species",
-    continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-    rounding_digits = 1
-  )
-
-
-data(mtcars)
-summary = mtcars |>
-  compare_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("vs", "am", "gear", "carb"),
-    continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year"), 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
   )
 ```
 
 By default, the binary/categorical columns are compared across groups
-using the Fisher’s Exact test. If the data is too large to be run
-efficiently using the standard Fisher’s Exact test, comparisons will be
-made using the Monte Carlo variant for Fisher’s.
+using the Chi square test or the Fisher’s Exact test, depending on the
+count of results. If there are no observations for a given subgroup, no
+p-value is provided (consider comparing across sub-groups that all have
+at least one observation in a separate analysis).
 
 ``` r
-mtcars |>
+penguins_data |> 
   compare_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("gear", "carb")
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year")
   )
-#> # A tibble: 12 × 6
-#>    Characteristic   `Cyl - 4`  `Cyl - 6`  `Cyl - 8`   `p-value` statistical_test
-#>    <chr>            <chr>      <chr>      <chr>       <chr>     <chr>           
-#>  1 "Total Count, n" "11"       "7"        "14"        ""        ""              
-#>  2 "Gear, n (%)"    ""         ""         ""          ""        ""              
-#>  3 "     3"         "1 (9.1)"  "2 (28.6)" "12 (85.7)" "<.01"    "Fisher's Exact"
-#>  4 "     4"         "8 (72.7)" "4 (57.1)" "0 (0)"     "<.01"    "Fisher's Exact"
-#>  5 "     5"         "2 (18.2)" "1 (14.3)" "2 (14.3)"  "1"       "Fisher's Exact"
-#>  6 "Carb, n (%)"    ""         ""         ""          ""        ""              
-#>  7 "     1"         "5 (45.5)" "2 (28.6)" "0 (0)"     ".01"     "Fisher's Exact"
-#>  8 "     2"         "6 (54.5)" "0 (0)"    "4 (28.6)"  ".06"     "Fisher's Exact"
-#>  9 "     3"         "0 (0)"    "0 (0)"    "3 (21.4)"  ".22"     "Fisher's Exact"
-#> 10 "     4"         "0 (0)"    "4 (57.1)" "6 (42.9)"  ".01"     "Fisher's Exact"
-#> 11 "     6"         "0 (0)"    "1 (14.3)" "0 (0)"     ".24"     "Fisher's Exact"
-#> 12 "     8"         "0 (0)"    "0 (0)"    "1 (7.1)"   "1"       "Fisher's Exact"
+#> # A tibble: 13 × 5
+#>    Characteristic   `Species - Adelie` `Species - Chinstrap` `p-value` statist…¹
+#>    <chr>            <chr>              <chr>                 <chr>     <chr>    
+#>  1 "Total Count, n" "152"              "68"                  ""        ""       
+#>  2 "Island, n (%)"  ""                 ""                    ""        ""       
+#>  3 "     Biscoe"    "44 (28.9)"        "0 (0)"               ""        "n/a"    
+#>  4 "     Dream"     "56 (36.8)"        "68 (100)"            "<.01"    "Chi-squ…
+#>  5 "     Torgersen" "52 (34.2)"        "0 (0)"               ""        "n/a"    
+#>  6 "Sex, n (%)"     ""                 ""                    ""        ""       
+#>  7 "     female"    "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
+#>  8 "     male"      "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
+#>  9 "     Missing"   "6 (3.9)"          "0 (0)"               ""        "n/a"    
+#> 10 "Year, n (%)"    ""                 ""                    ""        ""       
+#> 11 "     2007"      "50 (32.9)"        "26 (38.2)"           ".54"     "Chi-squ…
+#> 12 "     2008"      "50 (32.9)"        "18 (26.5)"           ".43"     "Chi-squ…
+#> 13 "     2009"      "52 (34.2)"        "24 (35.3)"           "1"       "Chi-squ…
+#> # … with abbreviated variable name ¹​statistical_test
 ```
 
 Continuous columns are compared between two groups by either 1) the
@@ -83,19 +82,26 @@ If a continuous variable has a non-normal distribution by the
 Shaprio-Wilk test, it is summarized using IQR.
 
 ``` r
-mtcars |>  
+penguins_data |> 
   compare_cols_by_group(
-    group_col = "cyl", 
-    continuous_cols = c("mpg", "disp", "hp")
+    group_col = "species", 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
   )
-#> # A tibble: 4 × 6
-#>   Characteristic     `Cyl - 4`           `Cyl - 6`       Cyl -…¹ p-val…² stati…³
-#>   <chr>              <chr>               <chr>           <chr>   <chr>   <chr>  
-#> 1 Total Count, n     11                  7               14      ""      ""     
-#> 2 Mpg, mean (SD)     26.7 (4.5)          19.7 (1.5)      15.1 (… "<.01"  "ANOVA"
-#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 167.6 [160.0, … 350.5 … "<.01"  "ANOVA"
-#> 4 Hp, median [IQR]   91.0 [65.5, 96.0]   110.0 [110.0, … 192.5 … "<.01"  "ANOVA"
-#> # … with abbreviated variable names ¹​`Cyl - 8`, ²​`p-value`, ³​statistical_test
+#> # A tibble: 9 × 5
+#>   Characteristic                 `Species - Adelie` Species - …¹ p-val…² stati…³
+#>   <chr>                          <chr>              <chr>        <chr>   <chr>  
+#> 1 "Total Count, n"               152                68           ""      ""     
+#> 2 "Bill Length Mm, median [IQR]" 38.8 [36.8, 40.8]  49.5 [46.3,… "<.01"  "Wilco…
+#> 3 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
+#> 4 "Bill Depth Mm, mean (SD)"     18.3 (1.2)         18.4 (1.1)   ".66"   "Stude…
+#> 5 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
+#> 6 "Flipper Length Mm, mean (SD)" 190.0 (6.5)        195.8 (7.1)  "<.01"  "Stude…
+#> 7 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
+#> 8 "Body Mass G, mean (SD)"       3,700.7 (458.6)    3,733.1 (38… ".59"   "Stude…
+#> 9 "     Missing, n (%)"          1 (0.7)            0 (0)        ""      "n/a"  
+#> # … with abbreviated variable names ¹​`Species - Chinstrap`, ²​`p-value`,
+#> #   ³​statistical_test
 ```
 
 Use the `remove_group_col_NA` and `cols_to_remove_NA` to remove rows
@@ -120,27 +126,24 @@ appropriate subpopulation.
 Neatly translate your formatted results to an XLSX file with the helper
 function `save_comparison_to_xlsx`.
 
-``` r
-mtcars |>  
-  compare_cols_by_group(
-    group_col = "cyl", 
-    continuous_cols = c("mpg", "disp", "hp")
-  ) |>
-   save_comparison_to_xlsx(
-     file_name = "Comparison.xlsx",
-     title = "Table 1: Outcomes in Population by Group"
-  )
-#> # A tibble: 4 × 6
-#>   Characteristic     `Cyl - 4`           `Cyl - 6`       Cyl -…¹ p-val…² stati…³
-#>   <chr>              <chr>               <chr>           <chr>   <chr>   <chr>  
-#> 1 Total Count, n     11                  7               14      ""      ""     
-#> 2 Mpg, mean (SD)     26.7 (4.5)          19.7 (1.5)      15.1 (… "<.01"  "ANOVA"
-#> 3 Disp, median [IQR] 108.0 [78.8, 120.7] 167.6 [160.0, … 350.5 … "<.01"  "ANOVA"
-#> 4 Hp, median [IQR]   91.0 [65.5, 96.0]   110.0 [110.0, … 192.5 … "<.01"  "ANOVA"
-#> # … with abbreviated variable names ¹​`Cyl - 8`, ²​`p-value`, ³​statistical_test
-```
+    #> # A tibble: 21 × 5
+    #>    Characteristic   `Species - Adelie` `Species - Chinstrap` `p-value` statist…¹
+    #>    <chr>            <chr>              <chr>                 <chr>     <chr>    
+    #>  1 "Total Count, n" "152"              "68"                  ""        ""       
+    #>  2 "Island, n (%)"  ""                 ""                    ""        ""       
+    #>  3 "     Biscoe"    "44 (28.9)"        "0 (0)"               ""        "n/a"    
+    #>  4 "     Dream"     "56 (36.8)"        "68 (100)"            "<.01"    "Chi-squ…
+    #>  5 "     Torgersen" "52 (34.2)"        "0 (0)"               ""        "n/a"    
+    #>  6 "Sex, n (%)"     ""                 ""                    ""        ""       
+    #>  7 "     female"    "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
+    #>  8 "     male"      "73 (48)"          "34 (50)"             ".9"      "Chi-squ…
+    #>  9 "     Missing"   "6 (3.9)"          "0 (0)"               ""        "n/a"    
+    #> 10 "Year, n (%)"    ""                 ""                    ""        ""       
+    #> # … with 11 more rows, and abbreviated variable name ¹​statistical_test
 
 It should leave you with a tidy XLSX file with something that looks like
-the following: ![A tidy XLSX table](man/figures/README-example-xlsx.png)
+the following:
+
+![A tidy XLSX table](man/figures/README-example-xlsx.png)
 
 *J.T. Menchaca*

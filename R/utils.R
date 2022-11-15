@@ -233,11 +233,43 @@ summarize_cont_vars = function(data, groups, cont_vars, rounding_digits){
 
     if (sum(dataset[[paste0(variable_name, "_NA")]], na.rm = T) > 0){
       dataset_subset = dataset |> dplyr::filter(!is.na(!!as.name(paste0(variable_name, "_NA"))))
-      fisher_results = stats::fisher.test(dataset_subset[[paste0(variable_name, "_NA")]],
-                                   dataset_subset[[groups_var]], simulate.p.value=TRUE) |> broom::tidy()
-      p_val = fisher_results$p.value |> round(3)
+
+      num_groups = dataset[[groups_var]] |>
+        unique() |>
+        length()
+
+      dataset_subset_summary = dataset_subset |>
+        dplyr::filter(!!as.name(paste0(variable_name, "_NA")) == 1) |>
+        dplyr::group_by(!!as.name(groups_var)) |>
+        dplyr::summarize(n = dplyr::n())
+
+      num_groups_with_at_least_one_obs = dataset_subset_summary |>
+        nrow()
+
+      min_group_val = min(dataset_subset_summary$n, na.rm = T)
+
+      if (num_groups_with_at_least_one_obs < num_groups) {
+        p_val = NA_real_
+        stat_val = "n/a"
+      } else {
+
+        if (min_group_val < 5) {
+          fisher_results = stats::fisher.test(dataset_subset[[paste0(variable_name, "_NA")]],
+                                              dataset_subset[[groups_var]], simulate.p.value=TRUE) |> broom::tidy()
+          p_val = fisher_results$p.value |> round(3)
+          stat_val = "Fisher's Exact"
+        } else {
+          chisq_results = stats::chisq.test(dataset_subset[[paste0(variable_name, "_NA")]],
+                                              dataset_subset[[groups_var]], simulate.p.value=TRUE) |> broom::tidy()
+          p_val = chisq_results$p.value |> round(3)
+          stat_val = "Chi-square"
+        }
+
+      }
+
+
       var_sum_na$p_values = p_val
-      var_sum_na$statistical_test = "Fisher's Exact"
+      var_sum_na$statistical_test = stat_val
 
       cont_summary = dplyr::bind_rows(cont_summary, var_sum1, var_sum_na)
     } else {
@@ -298,6 +330,7 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
   group_values = dataset[[groups_var]] |>
     unique() |>
     sort()
+  num_groups = length(group_values)
 
   # Create column titles for the group variable (this matches the other variable analysis)
   group_values_for_col = paste0(orig_groups_var, "_", group_values)
@@ -378,6 +411,9 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
     # Calculate p_values for each unique value in the column between groups
     p_vals = c()
 
+    # Keep track of what test is used
+    stat_tests = c()
+
     # For each value in variable ()
     for (value in var_values){
 
@@ -387,23 +423,42 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
       dataset_subset = dataset_hold |>
         dplyr::filter(!is.na(!!as.name(value)))
 
-      num_subgroups = dataset_subset |>
-        dplyr::group_by(!!as.name(groups_var), !!as.name(value)) |>
-        dplyr::summarize(n = dplyr::n()) |>
+      dataset_subset_summary = dataset_subset |>
+        dplyr::filter(!!as.name(value) == 1) |>
+        dplyr::group_by(!!as.name(groups_var)) |>
+        dplyr::summarize(n = dplyr::n())
+
+      num_groups_with_at_least_one_obs = dataset_subset_summary |>
         nrow()
 
-      if (num_subgroups <= 2) {
+      #print(paste0("num_groups_with_at_least_one_obs: ", num_groups_with_at_least_one_obs))
+
+      min_group_val = min(dataset_subset_summary$n, na.rm = T)
+
+      if (num_groups_with_at_least_one_obs < num_groups) {
         p_val = NA_real_
+        stat_test = "n/a"
       } else {
         #print("doing fisher")
-        fisher_results = stats::fisher.test(dataset_subset[[value]],
-                                     dataset_subset[[groups_var]],
-                                     simulate.p.value=TRUE) |>
-          broom::tidy()
-        p_val = fisher_results$p.value |> round(3)
+
+        if (min_group_val <= 5) {
+          fisher_results = stats::fisher.test(dataset_subset[[value]],
+                                              dataset_subset[[groups_var]]) |>
+            broom::tidy()
+          p_val = fisher_results$p.value |> round(3)
+          stat_test = "Fisher's Exact"
+        } else {
+          chisq_results = stats::chisq.test(dataset_subset[[value]],
+                                              dataset_subset[[groups_var]]) |>
+            broom::tidy()
+          p_val = chisq_results$p.value |> round(3)
+          stat_test = "Chi-squared"
+        }
+
       }
 
       p_vals = c(p_vals, p_val)
+      stat_tests = c(stat_tests, stat_test)
     }
 
 
@@ -434,6 +489,7 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
       dplyr::rename(characteristic = !!as.name(variable_name)) |>
       dplyr::select(characteristic, tidyselect::all_of(group_values_for_col))
     summary3$p_values = p_vals
+    summary3$statistical_test = stat_tests
 
     category_title = variables_nice[purrr::detect_index(variables, ~ . == variable_name)]
     category_title = paste0(category_title, ", n (%)")
@@ -450,8 +506,6 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
     }
 
 
-
-
     # Place missing values summary at end
     #print(any(stringr::str_detect(summary4$characteristic, "     Missing$")))
     if (any(stringr::str_detect(summary4$characteristic, "     Missing$"))){
@@ -464,11 +518,6 @@ summarize_bin_cat_vars = function(data, groups, bin_cat_vars, bin_cat_vars_subpo
 
     all_summary = all_summary |> dplyr::bind_rows(summary4)
   }
-
-  all_summary = all_summary |>
-    dplyr::mutate(
-      statistical_test = dplyr::if_else(p_values != "", "Fisher's Exact", "")
-    )
 
   return(all_summary)
 }

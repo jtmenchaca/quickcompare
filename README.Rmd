@@ -34,33 +34,29 @@ devtools::install_github("jtmenchaca/quickstats")
 ```{r example}
 library(quickstats)
 library(dplyr, quietly = T, warn.conflicts = F)
+library(palmerpenguins, quietly = T, warn.conflicts = F)
 
-data(iris)
-summary = iris |>
+data(penguins, package = "palmerpenguins")
+penguins_data = penguins |>
+  filter(species != "Gentoo") # Simplifying example for only 2 groups
+
+summary = penguins_data |> 
   compare_cols_by_group(
-    group_col = "Species",
-    continuous_cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-    rounding_digits = 1
-  )
-
-
-data(mtcars)
-summary = mtcars |>
-  compare_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("vs", "am", "gear", "carb"),
-    continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year"), 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
   )
 
 ```
 
-By default, the binary/categorical columns are compared across groups using the Fisher's Exact test.  If the data is too large to be run efficiently using the standard Fisher's Exact test, comparisons will be made using the Monte Carlo variant for Fisher's.
+By default, the binary/categorical columns are compared across groups using the Chi square test or the Fisher's Exact test, depending on the count of results.  If there are no observations for a given subgroup, no p-value is provided (consider comparing across sub-groups that all have at least one observation in a separate analysis).
 
 ```{r}
-mtcars |>
+penguins_data |> 
   compare_cols_by_group(
-    group_col = "cyl",
-    binary_or_cat_cols = c("gear", "carb")
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year")
   )
 ```
 
@@ -71,10 +67,11 @@ When comparing between three groups, the ANOVA test is used to compare continuou
 If a continuous variable has a non-normal distribution by the Shaprio-Wilk test, it is summarized using IQR.
 
 ```{r}
-mtcars |>  
+penguins_data |> 
   compare_cols_by_group(
-    group_col = "cyl", 
-    continuous_cols = c("mpg", "disp", "hp")
+    group_col = "species", 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
   )
 ```
 
@@ -90,19 +87,22 @@ For now, any columns specified in `binary_or_cat_cols_subpop` should be binary c
 
 Neatly translate your formatted results to an XLSX file with the helper function `save_comparison_to_xlsx`.
 
-```{r}
-mtcars |>  
+```{r echo=FALSE}
+penguins_data |> 
   compare_cols_by_group(
-    group_col = "cyl", 
-    continuous_cols = c("mpg", "disp", "hp")
+    group_col = "species", 
+    binary_or_cat_cols = c("island", "sex", "year"), 
+    continuous_cols = c("bill_length_mm", "bill_depth_mm", 
+                        "flipper_length_mm", "body_mass_g")
   ) |>
    save_comparison_to_xlsx(
      file_name = "Comparison.xlsx",
-     title = "Table 1: Outcomes in Population by Group"
+     title = "Table 1: Characteristics of Penguins by Species"
   )
 ```
 
 It should leave you with a tidy XLSX file with something that looks like the following: 
+
 ![A tidy XLSX table](man/figures/README-example-xlsx.png)
 
 *J.T. Menchaca*

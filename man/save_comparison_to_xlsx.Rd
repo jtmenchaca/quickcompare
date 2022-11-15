@@ -22,14 +22,20 @@ A data frame
 Save summary tables made with 'compare_cols_by_group'
 }
 \examples{
-summary = mtcars |>
+
+mtcars |>
   compare_cols_by_group(
     group_col = "cyl",
-    binary_or_cat_cols = c("vs", "am", "gear", "carb"),
-    continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
+    continuous_cols = c("mpg", "disp", "hp")
   ) |>
   save_comparison_to_xlsx(
     file_name = "Comparison.xlsx",
     title = "Table 1: Outcomes in Population by Group"
   )
+
+
+
+
+
+#' # penguins data can be pulled in from palmerpenguins library
 }

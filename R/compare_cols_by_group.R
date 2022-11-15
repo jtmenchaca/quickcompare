@@ -30,6 +30,7 @@
 #'     binary_or_cat_cols = c("vs", "am", "gear", "carb"),
 #'     continuous_cols = c("mpg", "disp", "hp", "drat", "wt", "qsec")
 #'   )
+#'
 
 compare_cols_by_group = function(data, group_col,
                                    binary_or_cat_cols = NULL,
